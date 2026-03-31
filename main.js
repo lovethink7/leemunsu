@@ -1,6 +1,28 @@
 const numbersContainer = document.querySelector("#numbers");
 const bonusContainer = document.querySelector("#bonus");
 const generateButton = document.querySelector("#generateButton");
+const themeToggle = document.querySelector("#themeToggle");
+const themeStorageKey = "lotto-theme";
+
+function getPreferredTheme() {
+  const savedTheme = window.localStorage.getItem(themeStorageKey);
+
+  if (savedTheme === "dark" || savedTheme === "light") {
+    return savedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
+function applyTheme(theme) {
+  const isDark = theme === "dark";
+  document.documentElement.dataset.theme = theme;
+  themeToggle.textContent = isDark ? "화이트 모드" : "다크 모드";
+  themeToggle.setAttribute("aria-label", isDark ? "화이트 모드 전환" : "다크 모드 전환");
+  themeToggle.setAttribute("aria-pressed", String(isDark));
+}
 
 function createBall(number, extraClass = "") {
   const ball = document.createElement("span");
@@ -36,5 +58,12 @@ function renderNumbers() {
   bonusContainer.appendChild(createBall(bonusNumber, "bonus-ball"));
 }
 
+themeToggle.addEventListener("click", () => {
+  const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  window.localStorage.setItem(themeStorageKey, nextTheme);
+  applyTheme(nextTheme);
+});
+
+applyTheme(getPreferredTheme());
 generateButton.addEventListener("click", renderNumbers);
 renderNumbers();

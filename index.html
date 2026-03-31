@@ -9,7 +9,18 @@
 <body>
   <main class="app">
     <section class="lotto-card">
-      <p class="eyebrow">Lucky Pick</p>
+      <div class="card-header">
+        <p class="eyebrow">Lucky Pick</p>
+        <button
+          id="themeToggle"
+          class="theme-toggle"
+          type="button"
+          aria-label="다크 모드 전환"
+          aria-pressed="false"
+        >
+          다크 모드
+        </button>
+      </div>
       <h1>로또 번호 생성기</h1>
       <p class="description">
         1부터 45까지의 숫자 중 중복 없이 6개를 추첨하고 보너스 번호를 함께 보여줍니다.
