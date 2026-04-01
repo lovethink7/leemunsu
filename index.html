@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>로또 번호 생성기</title>
+  <title>저녁 메뉴 추천</title>
   <link href="/style.css" rel="stylesheet" />
 </head>
 <body>
   <main class="app">
-    <section class="lotto-card">
+    <section class="menu-card">
       <div class="card-header">
-        <p class="eyebrow">Lucky Pick</p>
+        <div>
+          <p class="eyebrow">Dinner Pick</p>
+          <h1>오늘 저녁 뭐 먹지?</h1>
+        </div>
         <button
           id="themeToggle"
           class="theme-toggle"
@@ -21,25 +24,40 @@
           다크 모드
         </button>
       </div>
-      <h1>로또 번호 생성기</h1>
+
       <p class="description">
-        1부터 45까지의 숫자 중 중복 없이 6개를 추첨하고 보너스 번호를 함께 보여줍니다.
+        고민 끝내고 바로 고를 수 있게, 한 끼 메인 메뉴와 곁들이기 좋은 조합을 추천합니다.
       </p>
 
-      <div class="numbers-wrap">
-        <div>
-          <p class="label">당첨 번호</p>
-          <div id="numbers" class="numbers" aria-live="polite"></div>
-        </div>
+      <section class="hero-panel" aria-live="polite">
+        <p id="menuCategory" class="hero-kicker"></p>
+        <h2 id="menuName" class="hero-title"></h2>
+        <p id="menuDescription" class="hero-description"></p>
 
-        <div>
-          <p class="label">보너스</p>
-          <div id="bonus" class="bonus" aria-live="polite"></div>
-        </div>
-      </div>
+        <div id="menuTags" class="tag-list"></div>
 
-      <button id="generateButton" class="generate-button" type="button">
-        번호 생성하기
+        <div class="hero-meta">
+          <div class="meta-box">
+            <p class="label">추천 포인트</p>
+            <p id="menuReason" class="meta-value"></p>
+          </div>
+          <div class="meta-box">
+            <p class="label">같이 먹으면 좋은 메뉴</p>
+            <p id="menuPairing" class="meta-value"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="alternatives-section">
+        <div class="section-head">
+          <p class="label">다른 선택지</p>
+          <p class="section-copy">입맛이 바뀌면 아래 후보로 바로 갈아타면 됩니다.</p>
+        </div>
+        <div id="alternatives" class="alternatives"></div>
+      </section>
+
+      <button id="recommendButton" class="recommend-button" type="button">
+        저녁 메뉴 다시 추천받기
       </button>
     </section>
   </main>
