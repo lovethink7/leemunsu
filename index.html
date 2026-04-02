@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>가위바위보 AI 테스트</title>
+  <title>가위바위보 AI 테스트 | 손 모양 인식 데모와 사용 가이드</title>
+  <meta name="description" content="Teachable Machine으로 만든 가위바위보 AI 테스트 사이트입니다. 손 모양 인식 데모, 사용 방법, 모델 판별 기준, 오류를 줄이는 팁까지 한 번에 확인할 수 있습니다." />
   <meta name="google-adsense-account" content="ca-pub-5489177204055109" />
+  <link rel="canonical" href="https://leemunsu1.pages.dev/" />
   <link href="/style.css" rel="stylesheet" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5489177204055109" crossorigin="anonymous"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
@@ -12,157 +14,240 @@
   <script defer src="/main.js"></script>
 </head>
 <body>
-  <main class="app">
-    <section class="shell">
-      <div class="hero-card">
-        <div class="hero-copy">
-          <p class="eyebrow">Teachable Machine Demo</p>
-          <h1>가위바위보 AI 테스트</h1>
-          <p class="description">
-            카메라 앞에서 가위, 바위, 보를 내면 학습한 모델이 손 모양을 판별하고,
-            컴퓨터와 즉시 승패를 계산합니다.
-          </p>
-        </div>
-
-        <div class="hero-controls">
-          <button
-            id="themeToggle"
-            class="theme-toggle"
-            type="button"
-            aria-label="다크 모드 전환"
-            aria-pressed="false"
-          >
-            다크 모드
-          </button>
-          <button id="cameraButton" class="primary-button" type="button" onclick="init()">카메라 시작</button>
-        </div>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="brand-block">
+        <a class="brand" href="/">RPS AI Lab</a>
+        <p class="brand-note">가위바위보 손 모양 인식 실험실</p>
       </div>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a class="nav-link is-current" href="/">홈</a>
+        <a class="nav-link" href="/about.html">소개</a>
+        <a class="nav-link" href="/privacy.html">개인정보처리방침</a>
+        <a class="nav-link" href="/contact.html">문의</a>
+      </nav>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="다크 모드 전환" aria-pressed="false">다크 모드</button>
+    </header>
 
-      <section class="playground">
-        <article class="camera-panel">
-          <div class="section-head">
-            <div>
-              <p class="label">Live Camera</p>
-              <h2 class="section-title">손 모양 인식</h2>
-            </div>
-            <p id="statusText" class="section-copy">모델과 카메라를 아직 시작하지 않았습니다.</p>
+    <main class="site-main">
+      <section class="hero hero-home">
+        <div class="hero-copy">
+          <p class="eyebrow">Original Content</p>
+          <h1>가위바위보 AI를 직접 테스트하고, 왜 그렇게 인식했는지 이해할 수 있는 사이트</h1>
+          <p class="lead">
+            이 사이트는 제가 직접 학습한 Teachable Machine 이미지 모델을 기반으로 가위, 바위, 보 손 모양을 웹캠에서 실시간 판별하는 데모를 제공합니다.
+            단순히 결과만 보여주는 것이 아니라, 사용 방법, 인식률을 높이는 조건, 오인식이 자주 생기는 상황까지 정리해 두었습니다.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-link" href="#ai-test">바로 테스트하기</a>
+            <a class="secondary-link" href="#guide">사용 가이드 보기</a>
           </div>
+        </div>
+        <aside class="hero-side card-panel">
+          <p class="mini-label">이 사이트에서 할 수 있는 것</p>
+          <ul class="feature-list">
+            <li>웹캠으로 손 모양 실시간 인식</li>
+            <li>컴퓨터와 즉시 가위바위보 대결</li>
+            <li>클래스별 확률 확인</li>
+            <li>인식 오류를 줄이는 팁 확인</li>
+          </ul>
+        </aside>
+      </section>
 
-          <div class="camera-stage">
-            <div id="webcam-container" class="camera-mount">
-              <div class="camera-placeholder">
-                <strong>카메라 대기 중</strong>
-                <span>버튼을 눌러 카메라 권한을 허용하면 실시간 판별이 시작됩니다.</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="action-row">
-            <button id="playButton" class="secondary-button" type="button" disabled>이 손으로 대결하기</button>
-            <button id="refreshButton" class="ghost-button" type="button" disabled>다시 판별</button>
-          </div>
+      <section class="overview-grid">
+        <article class="info-card">
+          <p class="mini-label">직접 제작한 도구</p>
+          <h2>실제 손 모양 입력 기반 테스트</h2>
+          <p>버튼 클릭만 하는 가위바위보가 아니라 웹캠 앞에서 직접 손 모양을 보여주는 방식이라 모델 반응을 바로 확인할 수 있습니다.</p>
         </article>
-
-        <article class="score-panel">
-          <div class="section-head score-head">
-            <div>
-              <p class="label">Match Result</p>
-              <h2 class="section-title">대결 결과</h2>
-            </div>
-            <p id="roundGuide" class="section-copy">먼저 카메라를 시작하고 손 모양을 보여주세요.</p>
-          </div>
-
-          <div class="score-grid">
-            <div class="score-card user-card">
-              <p class="mini-label">내 손</p>
-              <p id="userHand" class="hand-value">대기 중</p>
-              <p id="userConfidence" class="hand-meta">신뢰도 0%</p>
-            </div>
-            <div class="score-card cpu-card">
-              <p class="mini-label">컴퓨터</p>
-              <p id="computerHand" class="hand-value">?</p>
-              <p id="computerHint" class="hand-meta">랜덤 선택</p>
-            </div>
-          </div>
-
-          <div class="result-banner">
-            <p class="mini-label">이번 판</p>
-            <h3 id="roundResult" class="result-title">준비 중</h3>
-            <p id="resultDetail" class="result-detail">모델이 가장 높은 확률로 인식한 손 모양으로 승패를 계산합니다.</p>
-          </div>
-
-          <div class="stats-strip">
-            <div class="stat-chip">
-              <span class="mini-label">승</span>
-              <strong id="winsCount">0</strong>
-            </div>
-            <div class="stat-chip">
-              <span class="mini-label">무</span>
-              <strong id="drawsCount">0</strong>
-            </div>
-            <div class="stat-chip">
-              <span class="mini-label">패</span>
-              <strong id="lossesCount">0</strong>
-            </div>
-          </div>
+        <article class="info-card">
+          <p class="mini-label">설명 중심 구조</p>
+          <h2>왜 인식이 흔들리는지 함께 설명</h2>
+          <p>손 각도, 배경 복잡도, 그림자, 프레임 중앙 정렬 여부가 결과에 어떤 영향을 주는지 문장으로 정리했습니다.</p>
+        </article>
+        <article class="info-card">
+          <p class="mini-label">탐색 가능한 사이트</p>
+          <h2>소개, 개인정보처리방침, 문의 페이지 제공</h2>
+          <p>도구형 페이지 하나만 두지 않고 사이트 정보와 운영 원칙을 분리해 신뢰성과 탐색성을 높였습니다.</p>
         </article>
       </section>
 
-      <section class="insights-panel">
+      <section id="ai-test" class="section-block">
         <div class="section-head">
           <div>
-            <p class="label">Model Output</p>
-            <h2 class="section-title">클래스 확률</h2>
+            <p class="label">AI Test</p>
+            <h2 class="section-title">가위바위보 손 모양 인식 데모</h2>
           </div>
-          <p class="section-copy">가장 높은 확률 클래스를 기준으로 내 손을 결정합니다.</p>
+          <p class="section-copy">Teachable Machine 이미지 모델 `cnu9ByevZ`를 이용해 실시간으로 가장 높은 확률의 클래스를 선택합니다.</p>
+        </div>
+
+        <div class="playground">
+          <article class="camera-panel card-panel">
+            <div class="section-head compact-head">
+              <div>
+                <p class="label">Live Camera</p>
+                <h3 class="sub-title">손 모양 입력</h3>
+              </div>
+              <p id="statusText" class="section-copy">모델과 카메라를 아직 시작하지 않았습니다.</p>
+            </div>
+
+            <div class="camera-stage">
+              <div id="webcam-container" class="camera-mount">
+                <div class="camera-placeholder">
+                  <strong>카메라 대기 중</strong>
+                  <span>카메라 시작 버튼을 누르고 권한을 허용하면 실시간 판별이 시작됩니다.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button id="cameraButton" class="primary-button" type="button" onclick="init()">카메라 시작</button>
+              <button id="playButton" class="secondary-button" type="button" disabled>이 손으로 대결하기</button>
+              <button id="refreshButton" class="ghost-button" type="button" disabled>결과 정리</button>
+            </div>
+          </article>
+
+          <article class="score-panel card-panel">
+            <div class="section-head compact-head">
+              <div>
+                <p class="label">Match Result</p>
+                <h3 class="sub-title">대결 결과</h3>
+              </div>
+              <p id="roundGuide" class="section-copy">먼저 카메라를 시작하고 손 모양을 보여주세요.</p>
+            </div>
+
+            <div class="score-grid">
+              <div class="score-card">
+                <p class="mini-label">내 손</p>
+                <p id="userHand" class="hand-value">대기 중</p>
+                <p id="userConfidence" class="hand-meta">신뢰도 0%</p>
+              </div>
+              <div class="score-card">
+                <p class="mini-label">컴퓨터</p>
+                <p id="computerHand" class="hand-value">?</p>
+                <p id="computerHint" class="hand-meta">랜덤 선택</p>
+              </div>
+            </div>
+
+            <div class="result-banner">
+              <p class="mini-label">이번 판</p>
+              <h3 id="roundResult" class="result-title">준비 중</h3>
+              <p id="resultDetail" class="result-detail">모델이 가장 높은 확률로 인식한 손 모양으로 승패를 계산합니다.</p>
+            </div>
+
+            <div class="stats-strip">
+              <div class="stat-chip"><span class="mini-label">승</span><strong id="winsCount">0</strong></div>
+              <div class="stat-chip"><span class="mini-label">무</span><strong id="drawsCount">0</strong></div>
+              <div class="stat-chip"><span class="mini-label">패</span><strong id="lossesCount">0</strong></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block card-panel">
+        <div class="section-head">
+          <div>
+            <p class="label">Prediction</p>
+            <h2 class="section-title">클래스별 확률</h2>
+          </div>
+          <p class="section-copy">현재 프레임에서 어떤 클래스가 얼마나 높은 확률로 감지되는지 시각적으로 확인할 수 있습니다.</p>
         </div>
         <div id="label-container" class="prediction-list"></div>
       </section>
 
-      <section class="guide-panel">
+      <section id="guide" class="section-block card-panel">
         <div class="section-head">
           <div>
-            <p class="label">How To Use</p>
-            <h2 class="section-title">테스트 방법</h2>
+            <p class="label">Guide</p>
+            <h2 class="section-title">제가 테스트하면서 정리한 사용 팁</h2>
           </div>
-          <p class="section-copy">밝은 조명과 단순한 배경에서 더 안정적으로 인식됩니다.</p>
+          <p class="section-copy">같은 모델이라도 사용 환경에 따라 체감 정확도가 달라집니다. 아래 팁은 실제 웹캠 테스트 기준으로 정리했습니다.</p>
         </div>
-
         <div class="guide-grid">
           <article class="guide-card">
-            <p class="mini-label">1</p>
-            <h3>카메라 시작</h3>
-            <p>브라우저 카메라 권한을 허용하면 모델과 웹캠이 함께 초기화됩니다.</p>
+            <p class="mini-label">환경</p>
+            <h3>밝은 조명과 단순한 배경이 유리합니다</h3>
+            <p>어두운 실내나 복잡한 배경에서는 손 윤곽이 흐려져 클래스 확률이 분산되는 경우가 많았습니다.</p>
           </article>
           <article class="guide-card">
-            <p class="mini-label">2</p>
-            <h3>손 모양 고정</h3>
-            <p>가위, 바위, 보 중 하나를 화면 중앙에 1초 정도 안정적으로 보여주세요.</p>
+            <p class="mini-label">구도</p>
+            <h3>손을 프레임 중앙에 두고 1초 정도 유지하세요</h3>
+            <p>손이 프레임 끝으로 치우치면 손가락 모양 일부가 잘려서 가위와 보가 헷갈리는 패턴이 자주 나왔습니다.</p>
           </article>
           <article class="guide-card">
-            <p class="mini-label">3</p>
-            <h3>대결 실행</h3>
-            <p>현재 인식된 손으로 컴퓨터와 한 판 붙고, 누적 승패 기록도 함께 확인합니다.</p>
+            <p class="mini-label">동작</p>
+            <h3>손을 빠르게 흔들지 않는 편이 좋습니다</h3>
+            <p>연속 프레임에서 손 모양이 급격히 바뀌면 최고 확률 클래스가 흔들리므로 정지 후 판별하는 것이 안정적입니다.</p>
           </article>
         </div>
       </section>
 
-      <section class="comments-section" aria-labelledby="commentsTitle">
-        <div class="section-head comments-head">
+      <section class="section-block prose-panel">
+        <div class="section-head">
+          <div>
+            <p class="label">How It Works</p>
+            <h2 class="section-title">이 사이트가 동작하는 방식</h2>
+          </div>
+          <p class="section-copy">광고를 보기 위해 만든 빈 페이지가 아니라, 직접 사용 가능한 도구이면서 설명 문서 역할도 하도록 구성했습니다.</p>
+        </div>
+        <div class="prose-grid">
+          <article>
+            <h3>1. 모델 로드</h3>
+            <p>페이지는 Teachable Machine에서 내보낸 `model.json`과 `metadata.json`을 불러와 브라우저에서 실행합니다. 별도 서버 추론이 아니라 사용자 브라우저에서 이미지 판별이 이뤄집니다.</p>
+          </article>
+          <article>
+            <h3>2. 웹캠 프레임 입력</h3>
+            <p>카메라 권한이 허용되면 웹캠 프레임이 연속으로 업데이트되고, 현재 화면의 손 모양이 각 클래스와 얼마나 비슷한지 확률로 표시됩니다.</p>
+          </article>
+          <article>
+            <h3>3. 최고 확률 클래스로 판정</h3>
+            <p>가위, 바위, 보 가운데 가장 높은 확률 값을 가진 클래스를 사용자의 현재 손으로 해석하고, 컴퓨터가 낸 랜덤 선택과 비교해 승패를 계산합니다.</p>
+          </article>
+          <article>
+            <h3>4. 결과 해석</h3>
+            <p>이 결과는 어디까지나 학습 데이터와 현재 프레임 상태의 영향을 받는 예측값입니다. 따라서 클래스 확률을 함께 보여주어 결과 해석 근거를 확인할 수 있도록 했습니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block prose-panel">
+        <div class="section-head">
+          <div>
+            <p class="label">FAQ</p>
+            <h2 class="section-title">자주 묻는 질문</h2>
+          </div>
+          <p class="section-copy">실제 테스트에서 많이 생기는 질문을 정리했습니다.</p>
+        </div>
+        <div class="faq-list">
+          <article class="faq-item">
+            <h3>왜 가위가 바위로 잘못 인식되나요?</h3>
+            <p>손가락 사이 간격이 좁거나 측면 각도로 촬영되면 손 윤곽이 뭉개져 바위에 가깝게 보일 수 있습니다. 손을 정면으로 펴고 배경을 단순하게 맞추는 것이 도움이 됩니다.</p>
+          </article>
+          <article class="faq-item">
+            <h3>모바일에서도 사용할 수 있나요?</h3>
+            <p>브라우저가 카메라 접근과 TensorFlow.js 실행을 허용하면 사용할 수 있습니다. 다만 모바일은 화면 크기가 작아 손 전체가 프레임에 안정적으로 들어오도록 거리를 조절하는 편이 좋습니다.</p>
+          </article>
+          <article class="faq-item">
+            <h3>개인정보는 어디로 전송되나요?</h3>
+            <p>이 도구는 웹캠 프레임을 브라우저에서 즉시 처리하는 구조를 기본 전제로 사용합니다. 자세한 내용은 개인정보처리방침 페이지에 정리해 두었습니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block comments-section card-panel" aria-labelledby="commentsTitle">
+        <div class="section-head">
           <div>
             <p class="label">Community</p>
-            <h2 id="commentsTitle" class="section-title">댓글</h2>
+            <h2 id="commentsTitle" class="section-title">사용 후기와 의견</h2>
           </div>
-          <p class="section-copy">모델 인식률이나 테스트 결과를 댓글로 남겨보세요.</p>
+          <p class="section-copy">직접 써본 결과나 오인식 사례를 남기면 이후 개선 포인트를 정리하는 데 도움이 됩니다.</p>
         </div>
-
         <div id="disqus_thread"></div>
         <script>
           var disqus_config = function () {
             this.page.url = 'https://leemunsu1.pages.dev/';
             this.page.identifier = 'rps-ai-test-home';
           };
-
           (function () {
             var d = document;
             var s = d.createElement('script');
@@ -171,12 +256,20 @@
             (d.head || d.body).appendChild(s);
           })();
         </script>
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
       </section>
-    </section>
-  </main>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>RPS AI Lab</strong>
+        <p>직접 학습한 이미지 모델을 테스트하고 사용 팁을 기록하는 실험형 정보 사이트입니다.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/about.html">소개</a>
+        <a href="/privacy.html">개인정보처리방침</a>
+        <a href="/contact.html">문의</a>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>
