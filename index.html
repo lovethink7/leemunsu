@@ -114,6 +114,36 @@
         </form>
       </section>
 
+      <section class="comments-section" aria-labelledby="commentsTitle">
+        <div class="section-head comments-head">
+          <div>
+            <p class="label">Community</p>
+            <h2 id="commentsTitle" class="contact-title">댓글</h2>
+          </div>
+          <p class="section-copy">추천 메뉴에 대한 의견이나 후기, 다른 메뉴 아이디어를 남겨보세요.</p>
+        </div>
+
+        <div id="disqus_thread"></div>
+        <script>
+          var disqus_config = function () {
+            this.page.url = 'https://leemunsu1.pages.dev/';
+            this.page.identifier = 'dinner-menu-home';
+          };
+
+          (function () {
+            var d = document;
+            var s = d.createElement('script');
+            s.src = 'https://leemunsu1-pages-dev.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </section>
+
       <button id="recommendButton" class="recommend-button" type="button">
         저녁 메뉴 다시 추천받기
       </button>

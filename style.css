@@ -201,7 +201,19 @@ h1 {
   border: 1px solid var(--surface-border);
 }
 
+.comments-section {
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 28px;
+  background: linear-gradient(160deg, transparent, var(--accent-soft) 140%), var(--surface);
+  border: 1px solid var(--surface-border);
+}
+
 .contact-head {
+  align-items: flex-end;
+}
+
+.comments-head {
   align-items: flex-end;
 }
 
@@ -329,6 +341,18 @@ h1 {
 
 .recommend-button:active {
   transform: translateY(1px);
+}
+
+#disqus_thread {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid var(--surface-border);
+}
+
+:root[data-theme="dark"] #disqus_thread {
+  background: rgba(13, 18, 31, 0.72);
 }
 
 @media (max-width: 760px) {
