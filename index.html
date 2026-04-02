@@ -56,6 +56,64 @@
         <div id="alternatives" class="alternatives"></div>
       </section>
 
+      <section class="contact-section" aria-labelledby="partnershipTitle">
+        <div class="section-head contact-head">
+          <div>
+            <p class="label">Partnership</p>
+            <h2 id="partnershipTitle" class="contact-title">제휴 문의</h2>
+          </div>
+          <p class="section-copy">브랜드 협업, 광고, 콘텐츠 제휴 문의를 아래 폼으로 받습니다.</p>
+        </div>
+
+        <form
+          class="contact-form"
+          action="https://formspree.io/f/mjgponjo"
+          method="POST"
+        >
+          <div class="form-grid">
+            <label class="field">
+              <span class="field-label">담당자명</span>
+              <input type="text" name="name" placeholder="홍길동" required />
+            </label>
+
+            <label class="field">
+              <span class="field-label">이메일</span>
+              <input type="email" name="email" placeholder="contact@company.com" required />
+            </label>
+
+            <label class="field">
+              <span class="field-label">회사명</span>
+              <input type="text" name="company" placeholder="회사 또는 브랜드명" />
+            </label>
+
+            <label class="field">
+              <span class="field-label">문의 유형</span>
+              <select name="inquiryType" required>
+                <option value="">선택해주세요</option>
+                <option value="brand-collab">브랜드 협업</option>
+                <option value="advertising">광고 제안</option>
+                <option value="content-partnership">콘텐츠 제휴</option>
+                <option value="other">기타</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="field">
+            <span class="field-label">문의 내용</span>
+            <textarea
+              name="message"
+              rows="6"
+              placeholder="제휴 목적, 예상 일정, 희망 진행 방식 등을 적어주세요."
+              required
+            ></textarea>
+          </label>
+
+          <input type="hidden" name="_subject" value="새 제휴 문의가 도착했습니다" />
+
+          <button class="submit-button" type="submit">제휴 문의 보내기</button>
+        </form>
+      </section>
+
       <button id="recommendButton" class="recommend-button" type="button">
         저녁 메뉴 다시 추천받기
       </button>

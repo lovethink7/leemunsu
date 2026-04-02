@@ -193,6 +193,24 @@ h1 {
   margin-top: 28px;
 }
 
+.contact-section {
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 28px;
+  background: linear-gradient(160deg, transparent, var(--accent-soft) 140%), var(--surface);
+  border: 1px solid var(--surface-border);
+}
+
+.contact-head {
+  align-items: flex-end;
+}
+
+.contact-title {
+  margin: 10px 0 0;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.1;
+}
+
 .section-head {
   display: flex;
   align-items: end;
@@ -216,6 +234,82 @@ h1 {
 .alternative-title {
   margin: 10px 0 0;
   font-size: 1.2rem;
+}
+
+.contact-form {
+  margin-top: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.field-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--toggle-border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text-main);
+  font: inherit;
+  resize: vertical;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+:root[data-theme="dark"] .field input,
+:root[data-theme="dark"] .field select,
+:root[data-theme="dark"] .field textarea {
+  background: rgba(13, 18, 31, 0.92);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-soft);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(203, 90, 46, 0.12);
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 16px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: var(--button-text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--button-shadow);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.submit-button:hover {
+  transform: translateY(-1px);
 }
 
 .recommend-button {
@@ -245,14 +339,16 @@ h1 {
   .card-header,
   .section-head,
   .hero-meta,
-  .alternatives {
+  .alternatives,
+  .form-grid {
     grid-template-columns: 1fr;
     flex-direction: column;
     align-items: flex-start;
   }
 
   .hero-meta,
-  .alternatives {
+  .alternatives,
+  .form-grid {
     display: grid;
   }
 
