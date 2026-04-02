@@ -3,131 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>저녁 메뉴 추천</title>
+  <title>가위바위보 AI 테스트</title>
   <link href="/style.css" rel="stylesheet" />
+  <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <script defer src="/main.js"></script>
 </head>
 <body>
   <main class="app">
-    <section class="menu-card">
-      <div class="card-header">
-        <div>
-          <p class="eyebrow">Dinner Pick</p>
-          <h1>오늘 저녁 뭐 먹지?</h1>
+    <section class="shell">
+      <div class="hero-card">
+        <div class="hero-copy">
+          <p class="eyebrow">Teachable Machine Demo</p>
+          <h1>가위바위보 AI 테스트</h1>
+          <p class="description">
+            카메라 앞에서 가위, 바위, 보를 내면 학습한 모델이 손 모양을 판별하고,
+            컴퓨터와 즉시 승패를 계산합니다.
+          </p>
         </div>
-        <button
-          id="themeToggle"
-          class="theme-toggle"
-          type="button"
-          aria-label="다크 모드 전환"
-          aria-pressed="false"
-        >
-          다크 모드
-        </button>
+
+        <div class="hero-controls">
+          <button
+            id="themeToggle"
+            class="theme-toggle"
+            type="button"
+            aria-label="다크 모드 전환"
+            aria-pressed="false"
+          >
+            다크 모드
+          </button>
+          <button id="cameraButton" class="primary-button" type="button" onclick="init()">카메라 시작</button>
+        </div>
       </div>
 
-      <p class="description">
-        고민 끝내고 바로 고를 수 있게, 한 끼 메인 메뉴와 곁들이기 좋은 조합을 추천합니다.
-      </p>
-
-      <section class="hero-panel" aria-live="polite">
-        <p id="menuCategory" class="hero-kicker"></p>
-        <h2 id="menuName" class="hero-title"></h2>
-        <p id="menuDescription" class="hero-description"></p>
-
-        <div id="menuTags" class="tag-list"></div>
-
-        <div class="hero-meta">
-          <div class="meta-box">
-            <p class="label">추천 포인트</p>
-            <p id="menuReason" class="meta-value"></p>
+      <section class="playground">
+        <article class="camera-panel">
+          <div class="section-head">
+            <div>
+              <p class="label">Live Camera</p>
+              <h2 class="section-title">손 모양 인식</h2>
+            </div>
+            <p id="statusText" class="section-copy">모델과 카메라를 아직 시작하지 않았습니다.</p>
           </div>
-          <div class="meta-box">
-            <p class="label">같이 먹으면 좋은 메뉴</p>
-            <p id="menuPairing" class="meta-value"></p>
+
+          <div class="camera-stage">
+            <div id="webcam-container" class="camera-mount">
+              <div class="camera-placeholder">
+                <strong>카메라 대기 중</strong>
+                <span>버튼을 눌러 카메라 권한을 허용하면 실시간 판별이 시작됩니다.</span>
+              </div>
+            </div>
           </div>
-        </div>
+
+          <div class="action-row">
+            <button id="playButton" class="secondary-button" type="button" disabled>이 손으로 대결하기</button>
+            <button id="refreshButton" class="ghost-button" type="button" disabled>다시 판별</button>
+          </div>
+        </article>
+
+        <article class="score-panel">
+          <div class="section-head score-head">
+            <div>
+              <p class="label">Match Result</p>
+              <h2 class="section-title">대결 결과</h2>
+            </div>
+            <p id="roundGuide" class="section-copy">먼저 카메라를 시작하고 손 모양을 보여주세요.</p>
+          </div>
+
+          <div class="score-grid">
+            <div class="score-card user-card">
+              <p class="mini-label">내 손</p>
+              <p id="userHand" class="hand-value">대기 중</p>
+              <p id="userConfidence" class="hand-meta">신뢰도 0%</p>
+            </div>
+            <div class="score-card cpu-card">
+              <p class="mini-label">컴퓨터</p>
+              <p id="computerHand" class="hand-value">?</p>
+              <p id="computerHint" class="hand-meta">랜덤 선택</p>
+            </div>
+          </div>
+
+          <div class="result-banner">
+            <p class="mini-label">이번 판</p>
+            <h3 id="roundResult" class="result-title">준비 중</h3>
+            <p id="resultDetail" class="result-detail">모델이 가장 높은 확률로 인식한 손 모양으로 승패를 계산합니다.</p>
+          </div>
+
+          <div class="stats-strip">
+            <div class="stat-chip">
+              <span class="mini-label">승</span>
+              <strong id="winsCount">0</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="mini-label">무</span>
+              <strong id="drawsCount">0</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="mini-label">패</span>
+              <strong id="lossesCount">0</strong>
+            </div>
+          </div>
+        </article>
       </section>
 
-      <section class="alternatives-section">
+      <section class="insights-panel">
         <div class="section-head">
-          <p class="label">다른 선택지</p>
-          <p class="section-copy">입맛이 바뀌면 아래 후보로 바로 갈아타면 됩니다.</p>
+          <div>
+            <p class="label">Model Output</p>
+            <h2 class="section-title">클래스 확률</h2>
+          </div>
+          <p class="section-copy">가장 높은 확률 클래스를 기준으로 내 손을 결정합니다.</p>
         </div>
-        <div id="alternatives" class="alternatives"></div>
+        <div id="label-container" class="prediction-list"></div>
       </section>
 
-      <section class="contact-section" aria-labelledby="partnershipTitle">
-        <div class="section-head contact-head">
+      <section class="guide-panel">
+        <div class="section-head">
           <div>
-            <p class="label">Partnership</p>
-            <h2 id="partnershipTitle" class="contact-title">제휴 문의</h2>
+            <p class="label">How To Use</p>
+            <h2 class="section-title">테스트 방법</h2>
           </div>
-          <p class="section-copy">브랜드 협업, 광고, 콘텐츠 제휴 문의를 아래 폼으로 받습니다.</p>
+          <p class="section-copy">밝은 조명과 단순한 배경에서 더 안정적으로 인식됩니다.</p>
         </div>
 
-        <form
-          class="contact-form"
-          action="https://formspree.io/f/mjgponjo"
-          method="POST"
-        >
-          <div class="form-grid">
-            <label class="field">
-              <span class="field-label">담당자명</span>
-              <input type="text" name="name" placeholder="홍길동" required />
-            </label>
-
-            <label class="field">
-              <span class="field-label">이메일</span>
-              <input type="email" name="email" placeholder="contact@company.com" required />
-            </label>
-
-            <label class="field">
-              <span class="field-label">회사명</span>
-              <input type="text" name="company" placeholder="회사 또는 브랜드명" />
-            </label>
-
-            <label class="field">
-              <span class="field-label">문의 유형</span>
-              <select name="inquiryType" required>
-                <option value="">선택해주세요</option>
-                <option value="brand-collab">브랜드 협업</option>
-                <option value="advertising">광고 제안</option>
-                <option value="content-partnership">콘텐츠 제휴</option>
-                <option value="other">기타</option>
-              </select>
-            </label>
-          </div>
-
-          <label class="field">
-            <span class="field-label">문의 내용</span>
-            <textarea
-              name="message"
-              rows="6"
-              placeholder="제휴 목적, 예상 일정, 희망 진행 방식 등을 적어주세요."
-              required
-            ></textarea>
-          </label>
-
-          <input type="hidden" name="_subject" value="새 제휴 문의가 도착했습니다" />
-
-          <button class="submit-button" type="submit">제휴 문의 보내기</button>
-        </form>
+        <div class="guide-grid">
+          <article class="guide-card">
+            <p class="mini-label">1</p>
+            <h3>카메라 시작</h3>
+            <p>브라우저 카메라 권한을 허용하면 모델과 웹캠이 함께 초기화됩니다.</p>
+          </article>
+          <article class="guide-card">
+            <p class="mini-label">2</p>
+            <h3>손 모양 고정</h3>
+            <p>가위, 바위, 보 중 하나를 화면 중앙에 1초 정도 안정적으로 보여주세요.</p>
+          </article>
+          <article class="guide-card">
+            <p class="mini-label">3</p>
+            <h3>대결 실행</h3>
+            <p>현재 인식된 손으로 컴퓨터와 한 판 붙고, 누적 승패 기록도 함께 확인합니다.</p>
+          </article>
+        </div>
       </section>
 
       <section class="comments-section" aria-labelledby="commentsTitle">
         <div class="section-head comments-head">
           <div>
             <p class="label">Community</p>
-            <h2 id="commentsTitle" class="contact-title">댓글</h2>
+            <h2 id="commentsTitle" class="section-title">댓글</h2>
           </div>
-          <p class="section-copy">추천 메뉴에 대한 의견이나 후기, 다른 메뉴 아이디어를 남겨보세요.</p>
+          <p class="section-copy">모델 인식률이나 테스트 결과를 댓글로 남겨보세요.</p>
         </div>
 
         <div id="disqus_thread"></div>
         <script>
           var disqus_config = function () {
             this.page.url = 'https://leemunsu1.pages.dev/';
-            this.page.identifier = 'dinner-menu-home';
+            this.page.identifier = 'rps-ai-test-home';
           };
 
           (function () {
@@ -143,12 +174,7 @@
           <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
         </noscript>
       </section>
-
-      <button id="recommendButton" class="recommend-button" type="button">
-        저녁 메뉴 다시 추천받기
-      </button>
     </section>
   </main>
-  <script defer type="text/javascript" src="/main.js"></script>
 </body>
 </html>
